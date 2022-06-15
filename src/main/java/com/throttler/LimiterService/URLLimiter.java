@@ -12,8 +12,10 @@ public class URLLimiter implements Limiter{
     int limitPerSecond;
     private RateLimiter rateLimiter;
     @Override
-    public synchronized void acquire(int counts) {
-        rateLimiter.acquire(counts);
+    public void acquire(int counts) {
+        synchronized (rateLimiter) {
+            rateLimiter.acquire(counts);
+        }
     }
     @PostConstruct
     private void init(){
