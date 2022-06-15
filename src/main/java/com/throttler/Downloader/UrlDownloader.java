@@ -1,6 +1,7 @@
 package com.throttler.Downloader;
 
 import com.throttler.InputStream.ThrottledInputStream;
+import com.throttler.Monitor.NetworkMonitor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -21,10 +22,11 @@ public class UrlDownloader implements Downloader{
     Path downloadDirectoryPath;
 
     private final ThrottledInputStream throttledInputStream;
-
+    private final NetworkMonitor networkMonitor;
     @Autowired
-    public UrlDownloader(ThrottledInputStream inputStream) {
+    public UrlDownloader(ThrottledInputStream inputStream, NetworkMonitor networkMonitor) {
         this.throttledInputStream = inputStream;
+        this.networkMonitor = networkMonitor;
     }
 
     @Override
@@ -32,6 +34,7 @@ public class UrlDownloader implements Downloader{
     public void download(URL url) {
         if (url != null) {
             Path filePath = getFileName(url);
+            long start = System.currentTimeMillis();
             System.out.printf("Thread %s starting download %s \n", Thread.currentThread().getName(), url.toString());
             try{
                 URLConnection connection = url.openConnection();
@@ -39,6 +42,7 @@ public class UrlDownloader implements Downloader{
                 throttledInputStream.setInputStream(inputStream);
                 Files.copy(throttledInputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
                 System.out.printf("Thread %s successfully downloaded %s \n", Thread.currentThread().getName(), url.toString());
+                networkMonitor.add(System.currentTimeMillis() - start, Files.size(filePath));
                 throttledInputStream.close();
             } catch (FileAlreadyExistsException e) {
                 System.out.printf("File %s has already been downloaded \n", url.toString());

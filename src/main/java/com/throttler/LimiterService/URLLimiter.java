@@ -19,6 +19,6 @@ public class URLLimiter implements Limiter{
     }
     @PostConstruct
     private void init(){
-        rateLimiter = RateLimiter.create(limitPerSecond / 8);
+        rateLimiter = RateLimiter.create(limitPerSecond );
     }
 }

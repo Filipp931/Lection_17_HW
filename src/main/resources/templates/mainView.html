@@ -12,6 +12,9 @@
 <div th:each="file : ${listURLs}">
     <p th:text="${file}"></p>
 </div>
-
+<form th:method="GET" th:action="@{/monitor}">
+    <input style='width: 250px; border-radius: 8px; background-color: #4CAF50; '
+           type="submit" value="Statistic" >
+</form > <br>
 </body>
 </html>
