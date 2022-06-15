@@ -21,10 +21,16 @@ public class UrlFilePreparer implements FilePreparer{
     @Value("${listFiles}")
     private String listFilesPath;
     private Queue<URL> urls;
+    private List<String> filesList = null;
 
     @Override
     public URL getUrl() {
         return urls.poll();
+    }
+
+    @Override
+    public List<String> getUrlsList() {
+        return filesList;
     }
 
     @PostConstruct
@@ -33,13 +39,12 @@ public class UrlFilePreparer implements FilePreparer{
         if(!Files.exists(path)&&Files.isRegularFile(path)) {
             throw new FileNotFoundException();
         }
-        List<String> urlsList = null;
         try {
-            urlsList = Files.readAllLines(path);
+            filesList = Files.readAllLines(path);
         } catch (IOException e) {
             System.out.println("error reading uris from file");
         }
-        urls = urlsList.stream().map(uri -> {
+        urls = filesList.stream().map(uri -> {
             URL url = null;
             try {
                 url = new URL(uri);
