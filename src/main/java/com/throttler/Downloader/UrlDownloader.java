@@ -36,15 +36,12 @@ public class UrlDownloader implements Downloader{
         if (url != null) {
             Path filePath = getFileName(url);
             System.out.printf("Thread %s starting download %s \n", Thread.currentThread().getName(), url.toString());
-            Long startTime = System.currentTimeMillis();
             try{
                 URLConnection connection = url.openConnection();
                 InputStream inputStream = connection.getInputStream();
                 throttledInputStream.setInputStream(inputStream);
                 Files.copy(throttledInputStream, filePath);
                 System.out.printf("Thread %s successfully downloaded %s \n", Thread.currentThread().getName(), url.toString());
-                Long downloadingTime = System.currentTimeMillis() - startTime;
-
                 throttledInputStream.close();
             } catch (FileAlreadyExistsException e) {
                 System.out.printf("File %s has already been downloaded \n", url.toString());

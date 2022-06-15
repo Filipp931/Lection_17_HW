@@ -2,7 +2,6 @@ package com.throttler.downloadStarter;
 
 import com.throttler.Downloader.Downloader;
 import com.throttler.filePreparer.FilePreparer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.net.URL;
@@ -12,7 +11,6 @@ public class MultithreadingUrlDownloadStarter implements MultithreadingDownloadS
     private final Downloader downloader;
     private final FilePreparer filePreparer;
 
-    @Autowired
     public MultithreadingUrlDownloadStarter(Downloader downloader, FilePreparer filePreparer) {
         this.downloader = downloader;
         this.filePreparer = filePreparer;
