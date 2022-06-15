@@ -12,10 +12,7 @@ import javax.annotation.PostConstruct;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 
 @Service
 @Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -40,7 +37,7 @@ public class UrlDownloader implements Downloader{
                 URLConnection connection = url.openConnection();
                 InputStream inputStream = connection.getInputStream();
                 throttledInputStream.setInputStream(inputStream);
-                Files.copy(throttledInputStream, filePath);
+                Files.copy(throttledInputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
                 System.out.printf("Thread %s successfully downloaded %s \n", Thread.currentThread().getName(), url.toString());
                 throttledInputStream.close();
             } catch (FileAlreadyExistsException e) {
